@@ -1,0 +1,51 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Agenda SIGAA</title>
+  <meta name="description" content="Extensão para Firefox que coloca as atividades do SIGAA/UFRN no seu Google Agenda.">
+  <link rel="icon" href="icone.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="estilo.css">
+</head>
+<body>
+  <main>
+    <header>
+      <img src="icone.svg" alt="">
+      <h1>Agenda SIGAA</h1>
+    </header>
+    <p class="discreto">Extensão para Firefox que coloca as atividades do SIGAA/UFRN no seu Google Agenda.</p>
+
+    <div class="aviso">
+      Projeto pessoal e <strong>não oficial</strong>. Não tem vínculo com a UFRN, com a STI/UFRN nem com o Google.
+    </div>
+
+    <h2>O que faz</h2>
+    <p>
+      Quando você abre o Portal do Discente no SIGAA, a extensão lê a lista <em>Minhas atividades</em> e cria
+      um evento no seu Google Agenda para cada atividade que ainda não está lá. O evento fica na data final
+      de entrega, no horário da aula da disciplina.
+    </p>
+
+    <h2>Como funciona</h2>
+    <ul>
+      <li>Lê apenas a página do SIGAA que você já abriu. Não faz login, não faz requisições ao SIGAA e não envia formulários.</li>
+      <li>Converte o código de horário da turma (ex.: <code>35T34</code>) no horário real da aula.</li>
+      <li>Antes de criar um evento, verifica se aquela atividade já está na agenda, para não duplicar.</li>
+      <li>Se o professor mudar o prazo, o evento é atualizado.</li>
+    </ul>
+
+    <h2>Privacidade</h2>
+    <p>
+      Os dados vão direto do seu navegador para o seu Google Agenda. Nada passa por servidores do desenvolvedor.
+      Leia a <a href="privacidade.html">Política de Privacidade</a>.
+    </p>
+
+    <footer class="discreto">
+      Contato: <a href="mailto:heittor.vcs@gmail.com">heittor.vcs@gmail.com</a> ·
+      <a href="privacidade.html">Política de Privacidade</a> ·
+      <a href="https://github.com/heittorvcs/sigaa-agenda">Código-fonte</a>
+    </footer>
+  </main>
+</body>
+</html>

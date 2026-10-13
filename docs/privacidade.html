@@ -1,0 +1,97 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Política de Privacidade · Agenda SIGAA</title>
+  <link rel="icon" href="icone.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="estilo.css">
+</head>
+<body>
+  <main>
+    <header>
+      <img src="icone.svg" alt="">
+      <h1>Política de Privacidade</h1>
+    </header>
+    <p class="discreto">Agenda SIGAA · última atualização: 13 de outubro de 2026</p>
+
+    <p>
+      Esta política descreve como a extensão para Firefox <strong>Agenda SIGAA</strong> trata os seus dados.
+      A extensão é um projeto pessoal e não oficial, sem vínculo com a UFRN nem com o Google.
+    </p>
+
+    <h2>Resumo</h2>
+    <ul>
+      <li>A extensão não tem servidor. Nenhum dado seu é enviado ao desenvolvedor.</li>
+      <li>Os dados acadêmicos vão do seu navegador direto para o seu Google Agenda, e para nenhum outro lugar.</li>
+      <li>Nada é vendido, compartilhado com terceiros nem usado para publicidade.</li>
+    </ul>
+
+    <h2>Dados que a extensão lê</h2>
+    <table>
+      <thead>
+        <tr><th>Origem</th><th>O que é lido</th><th>Para quê</th></tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>Portal do Discente do SIGAA (página aberta por você)</td>
+          <td>Nome, local e horário das turmas do semestre; título, tipo, disciplina e prazo das atividades.</td>
+          <td>Montar os eventos da agenda.</td>
+        </tr>
+        <tr>
+          <td>Google Agenda</td>
+          <td>Somente os eventos criados pela própria extensão, identificados por uma marcação interna.</td>
+          <td>Saber se uma atividade já está na agenda, para não criar duplicatas.</td>
+        </tr>
+      </tbody>
+    </table>
+    <p>
+      A extensão <strong>não</strong> lê sua senha do SIGAA, suas notas, seus dados pessoais do portal
+      nem os outros eventos da sua agenda.
+    </p>
+
+    <h2>Dados enviados ao Google</h2>
+    <p>
+      Para cada atividade, a extensão cria ou atualiza um evento no Google Agenda da sua conta com título,
+      disciplina, prazo, horário e local da turma. O envio é feito pela
+      <a href="https://developers.google.com/calendar/api">API do Google Agenda</a>, com a permissão
+      <code>https://www.googleapis.com/auth/calendar.events</code>, que você autoriza ao conectar a conta.
+    </p>
+
+    <h2>Dados guardados no seu computador</h2>
+    <p>
+      Ficam no armazenamento local da extensão no Firefox (<code>browser.storage.local</code>):
+      as configurações, os tokens de acesso ao Google, a última leitura do portal e a lista de eventos já
+      criados. Esses dados não saem do seu computador, exceto os tokens, que são enviados somente ao Google
+      para autenticar as chamadas.
+    </p>
+
+    <h2>Uso dos dados do Google</h2>
+    <p>
+      O uso e a transferência de informações recebidas das APIs do Google seguem a
+      <a href="https://developers.google.com/terms/api-services-user-data-policy">Política de Dados do Usuário dos Serviços de API do Google</a>,
+      incluindo os requisitos de Uso Limitado. Os dados do Google Agenda são usados somente para criar e
+      atualizar os eventos das suas atividades. Eles não são transferidos a terceiros, usados para publicidade
+      nem lidos por pessoas.
+    </p>
+
+    <h2>Como revogar o acesso e apagar os dados</h2>
+    <ul>
+      <li>No popup da extensão, clique em <strong>Desconectar</strong>: os tokens são apagados e o acesso é revogado no Google.</li>
+      <li>Você também pode revogar em <a href="https://myaccount.google.com/permissions">myaccount.google.com/permissions</a>.</li>
+      <li>Remover a extensão do Firefox apaga todos os dados guardados localmente.</li>
+      <li>Os eventos criados ficam na sua agenda até você apagá-los.</li>
+    </ul>
+
+    <h2>Alterações</h2>
+    <p>Mudanças nesta política serão publicadas nesta página, com a data de atualização.</p>
+
+    <h2>Contato</h2>
+    <p><a href="mailto:heittor.vcs@gmail.com">heittor.vcs@gmail.com</a></p>
+
+    <footer class="discreto">
+      <a href="index.html">Página inicial</a>
+    </footer>
+  </main>
+</body>
+</html>

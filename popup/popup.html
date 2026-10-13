@@ -1,0 +1,66 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8">
+  <title>SIGAA → Google Agenda</title>
+  <link rel="stylesheet" href="popup.css">
+</head>
+<body>
+  <header>
+    <img src="../icons/icone.svg" alt="" width="20" height="20">
+    <h1>SIGAA → Google Agenda</h1>
+  </header>
+
+  <section class="cartao" id="conta">
+    <div class="linha">
+      <span id="status-conta" class="status">Verificando…</span>
+      <button id="btn-conectar" hidden>Conectar Google</button>
+      <button id="btn-desconectar" class="secundario" hidden>Desconectar</button>
+    </div>
+    <p id="aviso-config" class="aviso" hidden>
+      Preencha o Client ID e o Client Secret em <b>Configurações</b> antes de conectar.
+    </p>
+  </section>
+
+  <section class="cartao">
+    <div class="linha">
+      <h2>Última sincronização</h2>
+      <button id="btn-sincronizar">Sincronizar agora</button>
+    </div>
+    <p id="resumo" class="discreto">Nenhuma ainda. Abra o Portal do Discente no SIGAA.</p>
+    <ul id="itens"></ul>
+  </section>
+
+  <details class="cartao" id="configuracoes">
+    <summary>Configurações</summary>
+    <label>Client ID
+      <input id="cfg-client-id" type="text" spellcheck="false" placeholder="xxxx.apps.googleusercontent.com">
+    </label>
+    <label>Client Secret
+      <input id="cfg-client-secret" type="password" spellcheck="false">
+    </label>
+    <label>URI de redirecionamento (cadastre no Google Cloud)
+      <span class="copiavel">
+        <input id="cfg-redirect" type="text" readonly>
+        <button id="btn-copiar" class="secundario" type="button">Copiar</button>
+      </span>
+    </label>
+    <label>ID da agenda
+      <input id="cfg-calendar-id" type="text" spellcheck="false" placeholder="primary">
+      <small>Use <code>primary</code> para a agenda principal, ou o ID de outra agenda (Configurações da agenda → Integrar agenda).</small>
+    </label>
+    <label class="checkbox">
+      <input id="cfg-vencidas" type="checkbox">
+      Criar eventos também para atividades com prazo vencido
+    </label>
+    <div class="linha">
+      <button id="btn-salvar">Salvar</button>
+      <button id="btn-esquecer" class="secundario" type="button" title="Faz a extensão recriar eventos que você apagou da agenda">Recriar apagados</button>
+    </div>
+    <p id="msg-config" class="discreto"></p>
+  </details>
+
+  <script src="../compartilhado/config.js"></script>
+  <script src="popup.js"></script>
+</body>
+</html>

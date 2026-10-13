@@ -1,0 +1,47 @@
+{
+  "manifest_version": 2,
+  "name": "SIGAA → Google Agenda",
+  "version": "1.0.0",
+  "description": "Lê as atividades do Portal do Discente do SIGAA/UFRN e cria eventos no Google Agenda na data de entrega, no horário da disciplina.",
+  "browser_specific_settings": {
+    "gecko": {
+      "id": "sigaa-agenda-google@heittor",
+      "strict_min_version": "140.0",
+      "data_collection_permissions": {
+        "required": ["websiteContent"]
+      }
+    }
+  },
+  "icons": {
+    "48": "icons/icone.svg",
+    "96": "icons/icone.svg"
+  },
+  "permissions": [
+    "storage",
+    "identity",
+    "https://sigaa.ufrn.br/*",
+    "https://www.googleapis.com/*",
+    "https://oauth2.googleapis.com/*"
+  ],
+  "background": {
+    "scripts": [
+      "compartilhado/config.js",
+      "background/horarios.js",
+      "background/google.js",
+      "background/sincronizacao.js"
+    ],
+    "persistent": true
+  },
+  "content_scripts": [
+    {
+      "matches": ["https://sigaa.ufrn.br/sigaa/*"],
+      "js": ["content/content.js"],
+      "run_at": "document_idle"
+    }
+  ],
+  "browser_action": {
+    "default_title": "SIGAA → Google Agenda",
+    "default_popup": "popup/popup.html",
+    "default_icon": "icons/icone.svg"
+  }
+}

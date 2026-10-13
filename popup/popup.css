@@ -1,0 +1,101 @@
+:root {
+  --fundo: #f8fafc;
+  --cartao: #ffffff;
+  --borda: #e2e8f0;
+  --texto: #0f172a;
+  --discreto: #64748b;
+  --primaria: #2563eb;
+  --ok: #16a34a;
+  --erro: #dc2626;
+  --alerta: #d97706;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --fundo: #0f172a;
+    --cartao: #1e293b;
+    --borda: #334155;
+    --texto: #f1f5f9;
+    --discreto: #94a3b8;
+    --primaria: #3b82f6;
+  }
+}
+
+* { box-sizing: border-box; }
+
+body {
+  width: 380px;
+  margin: 0;
+  padding: 12px;
+  font: 13px/1.4 system-ui, sans-serif;
+  background: var(--fundo);
+  color: var(--texto);
+}
+
+header { display: flex; align-items: center; gap: 8px; margin-bottom: 10px; }
+h1 { font-size: 15px; margin: 0; }
+h2 { font-size: 13px; margin: 0; }
+
+.cartao {
+  background: var(--cartao);
+  border: 1px solid var(--borda);
+  border-radius: 8px;
+  padding: 10px 12px;
+  margin-bottom: 10px;
+}
+
+.linha { display: flex; align-items: center; justify-content: space-between; gap: 8px; }
+.discreto { color: var(--discreto); margin: 6px 0 0; }
+.aviso { color: var(--alerta); margin: 8px 0 0; }
+
+.status::before { content: "●"; margin-right: 6px; color: var(--discreto); }
+.status.conectado::before { color: var(--ok); }
+.status.desconectado::before { color: var(--erro); }
+
+button {
+  font: inherit;
+  padding: 5px 10px;
+  border-radius: 6px;
+  border: 1px solid var(--primaria);
+  background: var(--primaria);
+  color: #fff;
+  cursor: pointer;
+  white-space: nowrap;
+}
+button.secundario { background: transparent; color: var(--primaria); }
+button:disabled { opacity: .5; cursor: default; }
+
+ul { list-style: none; margin: 8px 0 0; padding: 0; max-height: 260px; overflow-y: auto; }
+li { padding: 6px 0; border-top: 1px solid var(--borda); }
+li .titulo { font-weight: 600; }
+li .meta { color: var(--discreto); font-size: 12px; }
+.chip {
+  display: inline-block;
+  font-size: 11px;
+  padding: 0 6px;
+  border-radius: 9px;
+  margin-right: 4px;
+  color: #fff;
+  background: var(--discreto);
+}
+.chip.criado, .chip.atualizado { background: var(--ok); }
+.chip.existente { background: var(--primaria); }
+.chip.erro { background: var(--erro); }
+
+summary { cursor: pointer; font-weight: 600; }
+label { display: block; margin-top: 8px; color: var(--discreto); }
+label small { display: block; margin-top: 2px; }
+input[type="text"], input[type="password"] {
+  width: 100%;
+  margin-top: 2px;
+  padding: 5px 6px;
+  border: 1px solid var(--borda);
+  border-radius: 6px;
+  background: var(--fundo);
+  color: var(--texto);
+  font: inherit;
+}
+.copiavel { display: flex; gap: 6px; }
+.checkbox { display: flex; gap: 6px; align-items: center; color: var(--texto); }
+#configuracoes .linha { margin-top: 10px; }
+code { font-size: 12px; }
