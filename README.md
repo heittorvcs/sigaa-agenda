@@ -1,12 +1,85 @@
-# SIGAA → Google Agenda (Firefox)
+# Agenda SIGAA (Firefox)
 
-Extensão para Firefox que, sempre que você abre o **Portal do Discente** do SIGAA/UFRN, lê a lista
-**"Minhas atividades"** e cria no Google Agenda um evento para cada atividade que ainda não está lá.
+Extensão para Firefox que coloca as atividades do SIGAA/UFRN no seu Google Agenda.
+Projeto pessoal e **não oficial**, sem vínculo com a UFRN, a STI/UFRN ou o Google.
 
-> Projeto pessoal e **não oficial**, sem vínculo com a UFRN, a STI/UFRN ou o Google.
-> Página: <https://heittorvcs.github.io/sigaa-agenda/> · [Política de Privacidade](https://heittorvcs.github.io/sigaa-agenda/privacidade.html)
+## Download
 
-## Como funciona
+### **[⬇ Baixar a última versão (.xpi)](https://github.com/heittorvcs/sigaa-agenda/releases/latest)**
+
+Para instalar, arraste o arquivo `.xpi` para uma janela do Firefox ou use
+**about:addons → ⚙ → Instalar extensão de arquivo…**.
+
+---
+
+## Configurar a API do Google Agenda
+
+A extensão usa as **suas próprias credenciais** do Google, então cada pessoa cria as suas.
+Isso é feito uma vez só.
+
+### 1. Criar o projeto e ativar a API
+
+1. Acesse <https://console.cloud.google.com/> e crie um projeto (ex.: `agenda-sigaa`).
+2. Vá em **APIs e serviços → Biblioteca**, procure **Google Calendar API** e clique em **Ativar**.
+
+### 2. Configurar a tela de consentimento
+
+Em **Google Auth Platform**:
+
+1. Em **Público-alvo**, escolha o tipo de usuário **Externo**.
+2. Em **Branding**, preencha:
+
+   | Campo | Valor |
+   |---|---|
+   | Nome do app | `Agenda SIGAA`. Não use a palavra "Google": o Google não aceita a marca dele no nome do app. |
+   | E-mail de suporte | o seu e-mail |
+   | Logo | **deixe vazio**. Com logo, o Google passa a exigir a verificação completa do app. |
+   | Página inicial | `https://heittorvcs.github.io/sigaa-agenda/` |
+   | Política de privacidade | `https://heittorvcs.github.io/sigaa-agenda/privacidade.html` |
+   | Domínios autorizados | `heittorvcs.github.io` |
+
+3. Volte em **Público-alvo** e clique em **Publicar app**.
+   - **Não é preciso verificar o app** para uso pessoal. O limite é de até 100 usuários por app.
+   - Ao conectar, o Google mostra a tela "O Google não verificou este app". Clique em
+     **Avançado → Acessar Agenda SIGAA (não seguro)**.
+   - Se preferir não publicar, deixe o app em **Teste** e adicione o seu e-mail como **usuário de teste**.
+     A diferença é que nesse modo o Google desconecta a extensão a cada **7 dias**.
+
+### 3. Criar o cliente OAuth
+
+1. Vá em **Clientes → Criar cliente** e escolha o tipo **Aplicativo da Web**.
+2. Em **URIs de redirecionamento autorizados** (não em "Origens JavaScript autorizadas"), adicione
+   exatamente este endereço, com `https://` e com a barra no final:
+   ```
+   https://f790a6977f2f716092050edc704952e0eed304f2.extensions.allizom.org/
+   ```
+   O mesmo endereço aparece no popup da extensão, em **Configurações**, com um botão de copiar.
+3. Clique em **Salvar**. A alteração pode levar alguns minutos para valer.
+4. Copie o **ID do cliente** e a **Chave secreta do cliente**.
+
+### 4. Conectar a extensão
+
+1. Clique no ícone da extensão, abra **Configurações**, cole o **Client ID** e o **Client Secret** e clique em **Salvar**.
+2. Clique em **Conectar Google** e autorize o acesso ao Google Agenda.
+3. Abra o Portal do Discente no SIGAA. A sincronização acontece sozinha a cada visita.
+
+Por padrão, os eventos vão para a agenda principal (`primary`). Para usar outra agenda, cole o ID dela
+em **ID da agenda**. O ID fica no Google Agenda, em *Configurações da agenda → Integrar agenda*.
+
+### Problemas comuns
+
+| Problema | Causa e solução |
+|---|---|
+| `Erro 400: redirect_uri_mismatch` | O endereço do passo 3.2 não está no cliente cujo ID foi colado na extensão. Confira se o tipo do cliente é **Aplicativo da Web**, se o endereço está no campo de **redirecionamento** e se você clicou em **Salvar**. Depois espere uns 5 minutos. |
+| "O Google não verificou este app" | É o esperado. Clique em **Avançado → Acessar**. |
+| A extensão pede para conectar de novo toda semana | O app está em modo **Teste**. Publique o app (passo 2.3). |
+| "Conta Google não conectada" no aviso do SIGAA | Clique no ícone da extensão e em **Conectar Google**. |
+
+---
+
+## Apêndice
+
+### A. Como funciona
 
 1. Ao abrir `sigaa.ufrn.br/sigaa/portais/discente/discente.jsf`, o content script lê o HTML que já
    está na página:
@@ -28,7 +101,7 @@ Extensão para Firefox que, sempre que você abre o **Portal do Discente** do SI
 
 4. Um aviso no canto da página e o popup da extensão mostram o resultado.
 
-### Data e horário do evento
+### B. Data e horário do evento
 
 - **Data**: a data final de entrega.
 - **Horário**: o horário da disciplina naquele dia da semana, convertido pela tabela abaixo.
@@ -51,77 +124,39 @@ Dias: 2 = seg, 3 = ter, 4 = qua, 5 = qui, 6 = sex, 7 = sáb.
 
 A tabela fica em [background/horarios.js](background/horarios.js), caso precise de ajuste.
 
----
-
-## Configuração (uma vez só)
-
-### 1. Credenciais do Google (Google Cloud Console)
-
-A extensão acessa **só a sua agenda**, com as suas próprias credenciais.
-
-1. Acesse <https://console.cloud.google.com/> e crie um projeto (ex.: `sigaa-agenda`).
-2. **APIs e serviços → Biblioteca** → procure **Google Calendar API** → **Ativar**.
-3. **Google Auth Platform** (ou *Tela de consentimento OAuth*):
-   - Tipo de usuário: **Externo**. Preencha o nome do app (sem a palavra "Google", ex.: `Agenda SIGAA`)
-     e o seu e-mail. **Não envie logo**: com logo, o Google passa a exigir a verificação completa do app.
-   - Em **Público-alvo**, adicione o seu e-mail Google como **usuário de teste**.
-   - Importante: enquanto o app estiver em *Teste*, o Google invalida o acesso a cada **7 dias** e você
-     precisa clicar em **Conectar Google** de novo. Para evitar isso, clique em **Publicar app**
-     (não precisa de verificação para uso pessoal). Para publicar, o Google exige página inicial e
-     política de privacidade: use as da pasta [docs/](docs/), publicadas no GitHub Pages, e adicione o
-     domínio delas em **Domínios autorizados**. Na hora de conectar, o Google mostra o aviso
-     "app não verificado": clique em *Avançado → Acessar*.
-4. **Clientes → Criar cliente**:
-   - Tipo de aplicativo: **Aplicativo da Web**.
-   - **URIs de redirecionamento autorizados**:
-     ```
-     https://f790a6977f2f716092050edc704952e0eed304f2.extensions.allizom.org/
-     ```
-     Esse endereço também aparece em **Configurações** no popup da extensão, com botão de copiar.
-     Ele é fixo porque o ID da extensão é fixo (`sigaa-agenda-google@heittor`).
-5. Copie o **ID do cliente** e a **Chave secreta do cliente**.
-
-### 2. Instalar no Firefox
-
-**Para testar (temporário, some ao fechar o Firefox):**
-
-1. Abra `about:debugging#/runtime/this-firefox`.
-2. **Carregar extensão temporária…** → selecione o arquivo `manifest.json` desta pasta.
-
-**Para uso diário (permanente):** o Firefox comum só instala extensões assinadas pela Mozilla.
-A assinatura "não listada" é gratuita e automática, e a extensão **não** fica pública:
-
-1. Crie uma conta em <https://addons.mozilla.org> e gere as chaves de API em
-   <https://addons.mozilla.org/developers/addon/api/key/>.
-2. Nesta pasta, rode:
-   ```bash
-   npx web-ext sign --channel=unlisted --ignore-files "tests/**" "docs/**" README.md --api-key=SUA_CHAVE --api-secret=SEU_SEGREDO
-   ```
-3. Arraste o `.xpi` gerado em `web-ext-artifacts/` para uma janela do Firefox.
-
-Também dá para usar o **Firefox Developer Edition** ou o **Nightly**, com
-`xpinstall.signatures.required = false` em `about:config`, e instalar o `.zip` da pasta sem assinar.
-
-### 3. Conectar
-
-1. Clique no ícone da extensão → **Configurações** → cole o **Client ID** e o **Client Secret** → **Salvar**.
-2. Clique em **Conectar Google** e autorize o acesso ao Google Agenda.
-3. Abra o Portal do Discente no SIGAA. A sincronização acontece sozinha.
-
-Por padrão os eventos vão para a agenda principal (`primary`). Para usar outra agenda, cole o ID
-dela em **ID da agenda**. O ID fica em *Google Agenda → Configurações da agenda → Integrar agenda*.
-
----
-
-## Privacidade e segurança
+### C. Privacidade e segurança
 
 - **SIGAA:** a extensão só lê o portal que você já abriu. Sua senha do SIGAA nunca passa por ela.
 - **Google:** a permissão pedida é só `calendar.events` (ver e editar eventos). Não lê e-mail, Drive
   nem contatos.
 - **Dados guardados:** Client ID, Client Secret e tokens ficam só no armazenamento local da extensão
   (`browser.storage.local`). **Desconectar** apaga os tokens e revoga o acesso no Google.
+- Política completa: <https://heittorvcs.github.io/sigaa-agenda/privacidade.html>
 
-## Estrutura
+### D. Rodar a partir do código-fonte e assinar
+
+**Para testar (temporário, some ao fechar o Firefox):** abra `about:debugging#/runtime/this-firefox`,
+clique em **Carregar extensão temporária…** e selecione o `manifest.json`.
+
+**Para gerar um `.xpi` assinado** (o Firefox comum só instala extensões assinadas pela Mozilla):
+
+1. Aumente a `version` no `manifest.json`. O AMO não aceita reenviar uma versão que já existe.
+2. Gere as chaves de API em <https://addons.mozilla.org/developers/addon/api/key/>. O **Emissor JWT**
+   é a chave e o **Segredo JWT** é o segredo.
+3. Carregue as chaves no terminal. O segredo é digitado sem aparecer e não fica no histórico:
+   ```bash
+   read -rp "Emissor JWT: " WEB_EXT_API_KEY; read -rsp "Segredo JWT: " WEB_EXT_API_SECRET; echo; export WEB_EXT_API_KEY WEB_EXT_API_SECRET
+   ```
+4. Assine. A assinatura "não listada" é automática e a extensão não fica pública no AMO:
+   ```bash
+   npx web-ext sign --channel=unlisted --ignore-files "tests/**" "docs/**" README.md
+   ```
+5. O `.xpi` fica em `web-ext-artifacts/`. Publique-o numa Release do GitHub:
+   ```bash
+   gh release create vX.Y.Z web-ext-artifacts/*-X.Y.Z.xpi --title "vX.Y.Z" --notes "..."
+   ```
+
+### E. Estrutura do projeto
 
 ```
 manifest.json                 Manifest V2 (Firefox), ID fixo
@@ -131,11 +166,11 @@ background/google.js          OAuth (PKCE + refresh token) e API do Google Agend
 background/sincronizacao.js   Decide o que criar, atualizar ou ignorar
 compartilhado/config.js       Configurações do usuário
 popup/                        Status, botões e configurações
-tests/                        Testes (node --test)
 docs/                         Página inicial e política de privacidade (GitHub Pages)
+tests/                        Testes (node --test)
 ```
 
-## Testes
+### F. Testes
 
 ```bash
 node --test tests/
