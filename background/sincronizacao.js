@@ -18,7 +18,7 @@ function enfileirar(tarefa) {
 }
 
 function normalizar(texto) {
-  return (texto || '').normalize('NFD').replace(/[̀-ͯ]/g, '').replace(/\s+/g, ' ').trim().toUpperCase();
+  return (texto || '').normalize('NFD').replace(/[\u0300-\u036f]/g, '').replace(/\s+/g, ' ').trim().toUpperCase();
 }
 
 function encontrarTurma(atividade, turmas) {
@@ -34,14 +34,15 @@ function diaSeguinte(dataISO) {
   return new Date(Date.UTC(ano, mes - 1, dia + 1)).toISOString().slice(0, 10);
 }
 
+// O prazo vem como "AAAA-MM-DDTHH:MM" ou só "AAAA-MM-DD" (avaliação sem hora: vale até o fim do dia).
 function prazoComoData(prazo) {
-  return new Date(`${prazo}:00${OFFSET}`);
+  return new Date(`${prazo.includes('T') ? prazo : `${prazo}T23:59`}:00${OFFSET}`);
 }
 
 function formatarPrazo(prazo) {
   const [data, hora] = prazo.split('T');
   const [ano, mes, dia] = data.split('-');
-  return `${dia}/${mes}/${ano} às ${hora}`;
+  return hora ? `${dia}/${mes}/${ano} às ${hora}` : `${dia}/${mes}/${ano}`;
 }
 
 function montarEvento(atividade, turma) {
@@ -51,7 +52,7 @@ function montarEvento(atividade, turma) {
   const descricao = [
     `Disciplina: ${atividade.disciplina}`,
     `Tipo: ${atividade.tipo}`,
-    `Prazo de entrega no SIGAA: ${formatarPrazo(atividade.prazo)}`,
+    `${normalizar(atividade.tipo) === 'AVALIACAO' ? 'Data da avaliação' : 'Prazo de entrega'} no SIGAA: ${formatarPrazo(atividade.prazo)}`,
   ];
   if (turma) descricao.push(`Turma: ${turma.horario || 'sem horário'}${turma.local ? ` · ${turma.local}` : ''}`);
   descricao.push('', 'Criado automaticamente pela extensão SIGAA → Google Agenda.');

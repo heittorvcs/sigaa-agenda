@@ -1,7 +1,7 @@
 {
   "manifest_version": 2,
   "name": "SIGAA → Google Agenda",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Lê as atividades do Portal do Discente do SIGAA/UFRN e cria eventos no Google Agenda na data de entrega, no horário da disciplina.",
   "browser_specific_settings": {
     "gecko": {

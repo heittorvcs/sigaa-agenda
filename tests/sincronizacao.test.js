@@ -180,3 +180,40 @@ test('sem conta conectada, avisa para conectar e não chama a API', async () => 
   assert.equal(r.precisaConectar, true);
   assert.equal(amb.agenda.size, 0);
 });
+
+test('avaliação só com data (sem hora) vai para o horário da aula naquele dia', async () => {
+  const amb = criarAmbiente();
+  const dados = {
+    ...DADOS,
+    atividades: [
+      { chave: 'avaliacao-habc', idTurma: null, disciplina: 'ESTRUTURAS DE DADOS', tipo: 'Avaliação', titulo: '2ª Avaliação', prazo: '2026-10-29' },
+    ],
+  };
+  const r = await amb.enviar({ tipo: 'DADOS_SIGAA', dados });
+  assert.equal(r.itens[0].status, 'criado');
+  assert.equal(r.itens[0].quando, 'qui 29/10 16:40–18:20');
+
+  const [evento] = amb.agenda.values();
+  assert.equal(evento.summary, 'Avaliação: 2ª Avaliação — ESTRUTURAS DE DADOS');
+  assert.equal(evento.start.dateTime, '2026-10-29T16:40:00-03:00'); // quinta, 35T56 (achada pelo nome)
+  assert.match(evento.description, /Data da avaliação no SIGAA: 29\/10\/2026\n/);
+
+  const denovo = await amb.enviar({ tipo: 'DADOS_SIGAA', dados });
+  assert.equal(denovo.itens[0].status, 'existente');
+  assert.equal(amb.agenda.size, 1);
+});
+
+test('avaliação sem hora no próprio dia ainda não está vencida', async () => {
+  const amb = criarAmbiente({ agora: '2026-10-29T20:00:00-03:00' });
+  const dados = {
+    ...DADOS,
+    atividades: [
+      { chave: 'avaliacao-hdef', idTurma: '1002', disciplina: 'ESTRUTURAS DE DADOS', tipo: 'Avaliação', titulo: 'Prova', prazo: '2026-10-29' },
+      { chave: 'avaliacao-hghi', idTurma: '1002', disciplina: 'ESTRUTURAS DE DADOS', tipo: 'Avaliação', titulo: 'Prova antiga', prazo: '2026-10-28' },
+    ],
+  };
+  const r = await amb.enviar({ tipo: 'DADOS_SIGAA', dados });
+  assert.equal(r.itens[0].status, 'criado');
+  assert.equal(r.itens[1].status, 'ignorado');
+  assert.equal(r.itens[1].detalhe, 'prazo já passou');
+});

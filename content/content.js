@@ -50,7 +50,8 @@
       const celulas = linha.querySelectorAll(':scope > td');
       if (celulas.length < 3) continue;
 
-      const data = limpar(celulas[1].textContent).match(/(\d{2})\/(\d{2})\/(\d{4})\s+(\d{2}):(\d{2})/);
+      // Tarefas vêm com data e hora ("16/10/2026 23:59"); avaliações, só com a data ("29/10/2026").
+      const data = limpar(celulas[1].textContent).match(/(\d{2})\/(\d{2})\/(\d{4})(?:\s+(\d{2}):(\d{2}))?/);
       if (!data) continue;
       const [, dia, mes, ano, hora, minuto] = data;
 
@@ -65,11 +66,12 @@
         ? textoDoIntervalo((r) => { r.setStartAfter(rotulo); r.setEnd(celula, celula.childNodes.length); })
         : '';
 
-      // O link da atividade tem o id dela no SIGAA: {'id':'123456789','idTurma':'12345678'}
+      // O link da atividade tem o id dela no SIGAA: {'id':'123456789','idTurma':'12345678'}.
+      // Avaliações não têm link: a chave vem da disciplina + título.
       const onclick = celula.querySelector('a[onclick]')?.getAttribute('onclick') || '';
       const id = onclick.match(/'id'\s*:\s*'(\d+)'/)?.[1];
       const idTurma = onclick.match(/'idTurma'\s*:\s*'(\d+)'/)?.[1] || null;
-      const tipoChave = tipo.normalize('NFD').replace(/[̀-ͯ]/g, '').toLowerCase().replace(/\W+/g, '-');
+      const tipoChave = tipo.normalize('NFD').replace(/[\u0300-\u036f]/g, '').toLowerCase().replace(/\W+/g, '-');
 
       atividades.push({
         chave: id ? `${tipoChave}-${id}` : `${tipoChave}-h${hash(`${disciplina}|${titulo}`)}`,
@@ -77,7 +79,7 @@
         disciplina,
         tipo,
         titulo: titulo || tipo,
-        prazo: `${ano}-${mes}-${dia}T${hora}:${minuto}`,
+        prazo: hora ? `${ano}-${mes}-${dia}T${hora}:${minuto}` : `${ano}-${mes}-${dia}`,
       });
     }
     return atividades;
